@@ -2,8 +2,8 @@
 #define DECK_H
 
 #include "deck.h"
-#include <vector>
 #include <string>
+
 using namespace std;
 
 class Deck {
@@ -15,7 +15,8 @@ public:
     Deck(string filename);
     ~Deck();
     void getDeck(string filename);
-    void dealCard();
+    string dealCard();
+    int getValue(string newCard);
 };
 
 #endif

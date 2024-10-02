@@ -1,6 +1,7 @@
 #include "deck.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <ctime>
 
 
@@ -8,7 +9,6 @@ using namespace std;
 
 Deck::Deck (string filename) : cards(nullptr), size(0) {
     getDeck(filename);
-    dealCard();
 }
 
 Deck::~Deck(){
@@ -33,15 +33,28 @@ void Deck::getDeck(string filename) {
         file >> *cards[i];
     }
 
-    // for (int i = 0; i < size-1; ++i) {
-    //     cout << "This is the " << i-1 << " card: " << *cards[i] << "\n";
-    // }
-
     file.close();
 }
 
-void Deck::dealCard() {
+string Deck::dealCard() {
+    string newCard;
     srand(std::time(0));
     int randomNum = ( rand() % 52 + 1 );
-    cout << *cards[randomNum];
+    cout << "Your new random number is: " << randomNum << endl;
+    newCard = *cards[randomNum];
+    
+    return newCard;
+}
+
+int Deck::getValue(string newCard){
+    int cardValue;
+    if (newCard == "Q" || newCard == "K" || newCard == "J") {
+        cardValue = 10;
+    } else if (newCard == "A"){
+        cardValue = 11;
+    } else {
+        cardValue = stoi(newCard);
+    }
+
+    return cardValue;
 }
