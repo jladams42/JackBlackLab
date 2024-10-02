@@ -61,7 +61,6 @@ int main() {
             case 4: {
                 // This will just exit the game without saving any information.
                 break;
-                return;
             }
 
             default: {
