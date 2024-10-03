@@ -61,8 +61,8 @@ void Game::playHand(string filename, bool newGame){
         cin.ignore();
 
         // This ensures that the user can't bet more than their available balance.
-        while(bet > bal){
-            cout << "You can't bet more than your available balance. Please choose another amount: ";
+        while(bet > bal || bet < 1 ){
+            cout << "You can't bet more than your available balance or $0! Please choose another amount: ";
             cin >> bet;
             cin.ignore();
         }
@@ -87,7 +87,7 @@ void Game::playHand(string filename, bool newGame){
         playerValue += cardValue(playerHand[i]);
         dealerValue += cardValue(dealerHand[i]);
     }
-    
+
     // Resets the int i value for use in the while loop.
     int i = 2;
 
@@ -99,6 +99,24 @@ void Game::playHand(string filename, bool newGame){
         for (int n = 0; n < i; ++n) {
             cout << *playerHand[n] << " ";
         }
+
+        // Check if the player initial hand is Black Jack for an instant win!
+        if (playerValue == 21 && dealerValue != 21){
+            cout << "\nBLACK JACK!\n";
+            cout << "You win! You've won $" << bet << "!\n";
+            newBal = player.getBalance() + bet;
+            player.setBalance(newBal); // Updates the player balance.
+            stopRound = true;
+            break;
+        } else if (playerValue == 21 && dealerValue == 21) { // This checks the dealers initial hand to see if they have 21 - if so its a tie.
+            cout << "\nThe dealer has " << *dealerHand[0] << *dealerHand[1] << endl;
+            cout << "\nYou both have 21! Thats a tie. You get your money back." << endl;
+            newBal = player.getBalance();
+            player.setBalance(newBal);
+            stopRound = true;
+            break;
+        }
+
         //cout << "Your hand is showing: " << *playerHand[0] << " and " << *playerHand[1] << endl;
         cout << "\nThis gives you a total of: " << playerValue << endl;
         cout << "The dealer is showing: " << *dealerHand[0] << endl;
@@ -150,6 +168,7 @@ void Game::playHand(string filename, bool newGame){
             int i = 2;
             dealerHand[i] = new string;
             *dealerHand[i] = deck.dealCard();
+            cout << "The dealer hits and drew a: " << *dealerHand[i] << endl;
             dealerValue += cardValue(dealerHand[i]);
         }
 
@@ -196,3 +215,4 @@ int Game::cardValue(string* currentCards){
 
     return cardValue;
 }
+
