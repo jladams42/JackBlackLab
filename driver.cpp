@@ -16,10 +16,8 @@ void displayMenu() {
 }
 
 int main() {
-    bool exitGame = false;
-
-
-    while (!exitGame) {
+    bool isPlaying = true;
+    while (isPlaying) {
         displayMenu();
 
         int choice;
@@ -40,13 +38,14 @@ int main() {
 
             case 3: {
                 // This will just exit the game without saving any information.
-                exitGame = true;
+                isPlaying = false;
                 break;
             }
 
             default: {
                 cout << "Invalid option! Please make another choice.\n";
-                exitGame = false;
+                cin.clear();
+                cin.ignore();
                 break;
             }
         }
