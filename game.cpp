@@ -31,10 +31,15 @@ void Game::playHand(string filename, bool newGame){
         cout << "You have no more money to bet! Please start a new game!\n";
         return;
     } else {
-        
         cout << "Enter how much you would like to bet: ";
         cin >> bet;
         cin.ignore();
+
+        while(bet > bal){
+            cout << "You can't bet more than your available balance. Please choose another amount: ";
+            cin >> bet;
+            cin.ignore();
+        }
     }
 
     Deck deck(filename);
