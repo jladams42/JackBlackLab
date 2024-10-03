@@ -164,15 +164,24 @@ void Game::playHand(string filename, bool newGame){
 
     // Dealers turn and will draw cards until they reach 17 (Default dealer logic).
     if (!stopRound){
-        while(dealerValue < 17){
-            int i = 2;
-            dealerHand[i] = new string;
-            *dealerHand[i] = deck.dealCard();
-            cout << "The dealer hits and drew a: " << *dealerHand[i] << endl;
-            dealerValue += cardValue(dealerHand[i]);
+        int i = 2;
+
+        // Used to reveal the dealers hand before they take their turn. 
+        cout << "The dealer filps their cards and shows: " << endl;
+        for (int n = 0; n < i; ++n) {
+            cout << *dealerHand[n] << " ";
         }
 
-        cout << "The dealer filps their cards and shows: " << dealerValue << endl;
+        // Follows some basic logic the dealer will hit until they reach 17. 
+        while(dealerValue < 17){
+            dealerHand[i] = new string;
+            *dealerHand[i] = deck.dealCard();
+            cout << "\nThe dealer hits and drew a: " << *dealerHand[i] << endl;
+            dealerValue += cardValue(dealerHand[i]);
+            ++i;
+        }
+
+        cout << "\nThis brings the value of the dealers hand to: " << dealerValue << endl;
 
         // This handles all the logic for if you dealers busts, if the player has higher than the dealer
         // without busting or if the player loses to the dealer. 
