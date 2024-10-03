@@ -114,6 +114,7 @@ void Game::playHand(string filename, bool newGame){
             cout << "------NEXT ROUND------\n";
             cout << "----------------------\n";
             cout << "You drew a " << *playerHand[i] << endl;
+            cout << "This brings your total to: " << playerValue << endl;
 
         } else {
             cout << "------NEXT ROUND------\n";
@@ -123,6 +124,7 @@ void Game::playHand(string filename, bool newGame){
 
         // Calculates if the player got 21 or not. If so triggers a win response.
         if (playerValue == 21){
+            cout << "BLACK JACK!\n";
             cout << "You win! You've won $" << bet << "!\n";
             newBal = player.getBalance() + bet;
             player.setBalance(newBal); // Updates the player balance.
