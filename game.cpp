@@ -57,7 +57,7 @@ void Game::playHand(string filename, bool newGame){
     int dealerValue = 0;
     string response;
     bool cont = true;
-    bool isBust = false;
+    bool stopRound = false;
     playerHand = new string*[size];
     dealerHand = new string*[size];
     
@@ -75,7 +75,7 @@ void Game::playHand(string filename, bool newGame){
         dealerValue += cardValue(dealerHand[i]);
     }
     
-    while(cont && !isBust){
+    while(cont && !stopRound){
         cout << "Your hand is showing: " << *playerHand[0] << " and " << *playerHand[1] << endl;
         cout << "This gives you a total of: " << playerValue << endl;
         cout << "The dealer is showing: " << *dealerHand[0] << endl;
@@ -97,14 +97,14 @@ void Game::playHand(string filename, bool newGame){
             cout << "You win! You've won $" << bet << "!\n";
             newBal = player.getBalance() + bet;
             player.setBalance(newBal);
-            isBust = true;
+            stopRound = true;
             break;
         } else if (playerValue > 21){
             cout << "You bust!\n";
             cout << "The dealer wins! You've lost $" << bet << "!\n";
             newBal = player.getBalance() - bet;
             player.setBalance(newBal);
-            isBust = true;
+            stopRound = true;
             break;
         }
 
@@ -112,7 +112,7 @@ void Game::playHand(string filename, bool newGame){
     }
 
     // Dealers turn
-    if (!isBust){
+    if (!stopRound){
         while(dealerValue < 17){
             int i = 2;
             dealerHand[i] = new string;
