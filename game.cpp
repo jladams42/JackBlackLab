@@ -19,6 +19,13 @@ Game::~Game(){
 void Game::playHand(string filename, bool newGame){
     Player player;
     int bet, newBal;
+    const int size = 10;
+    int playerValue = 0;
+    int dealerValue = 0;
+    string response;
+    bool cont = true;
+    bool stopRound = false;
+
     if (newGame) {
         player.saveToFile();
         player.displayInfo();
@@ -52,12 +59,7 @@ void Game::playHand(string filename, bool newGame){
     }
 
     Deck deck(filename);
-    const int size = 10;
-    int playerValue = 0;
-    int dealerValue = 0;
-    string response;
-    bool cont = true;
-    bool stopRound = false;
+
     playerHand = new string*[size];
     dealerHand = new string*[size];
     
@@ -75,12 +77,16 @@ void Game::playHand(string filename, bool newGame){
         dealerValue += cardValue(dealerHand[i]);
     }
     
+    int i = 2;
     while(cont && !stopRound){
-        cout << "Your hand is showing: " << *playerHand[0] << " and " << *playerHand[1] << endl;
-        cout << "This gives you a total of: " << playerValue << endl;
+        cout << "Your hand is: ";
+        for (int n = 0; n < i; ++n) {
+            cout << *playerHand[n] << " ";
+        }
+        //cout << "Your hand is showing: " << *playerHand[0] << " and " << *playerHand[1] << endl;
+        cout << "\nThis gives you a total of: " << playerValue << endl;
         cout << "The dealer is showing: " << *dealerHand[0] << endl;
 
-        int i = 2;
         cout << "Do you want to hit or stay? (h/s)\n";
         cin >> response;
         cin.ignore();
@@ -89,7 +95,13 @@ void Game::playHand(string filename, bool newGame){
             playerHand[i] = new string;
             *playerHand[i] = deck.dealCard();
             playerValue += cardValue(playerHand[i]);
+            cout << "------NEXT ROUND------\n";
+            cout << "----------------------\n";
+            cout << "You drew a " << *playerHand[i] << endl;
+
         } else {
+            cout << "------NEXT ROUND------\n";
+            cout << "----------------------\n";
             cont = false;
         }
 
