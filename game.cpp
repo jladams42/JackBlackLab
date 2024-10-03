@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <ctime>
+#include <typeinfo>
 
 
 using namespace std;
@@ -33,6 +34,14 @@ void Game::playHand(string filename, bool newGame){
     } else {
         cout << "Enter how much you would like to bet: ";
         cin >> bet;
+        // This is validation needed incase the user doesn't input the a proper integer -- Referenced from GeeksForGeeks.
+        while(cin.fail()) { 
+            cin.clear();
+            cin.ignore();
+            cout << "Not a valid integer!\n";
+            cout << "Enter how much you would like to bet: ";
+            cin >> bet;
+        }
         cin.ignore();
 
         while(bet > bal){
@@ -67,12 +76,8 @@ void Game::playHand(string filename, bool newGame){
     }
     
     while(cont && !isBust){
-        if (playerValue > 21){
-            cout << "You bust!\n";
-            isBust = true;
-            break;
-        }
-        cout << "You have a total of: " << playerValue << endl;
+        cout << "Your hand is showing: " << *playerHand[0] << " and " << *playerHand[1] << endl;
+        cout << "This gives you a total of: " << playerValue << endl;
         cout << "The dealer is showing: " << *dealerHand[0] << endl;
 
         int i = 2;
@@ -87,33 +92,55 @@ void Game::playHand(string filename, bool newGame){
         } else {
             cont = false;
         }
+
+        if (playerValue == 21){
+            cout << "You win! You've won $" << bet << "!\n";
+            newBal = player.getBalance() + bet;
+            player.setBalance(newBal);
+            isBust = true;
+            break;
+        } else if (playerValue > 21){
+            cout << "You bust!\n";
+            cout << "The dealer wins! You've lost $" << bet << "!\n";
+            newBal = player.getBalance() - bet;
+            player.setBalance(newBal);
+            isBust = true;
+            break;
+        }
+
         ++i;
     }
 
     // Dealers turn
-    while(dealerValue < 17){
-        int i = 2;
-        dealerHand[i] = new string;
-        *dealerHand[i] = deck.dealCard();
-        dealerValue += cardValue(dealerHand[i]);
+    if (!isBust){
+        while(dealerValue < 17){
+            int i = 2;
+            dealerHand[i] = new string;
+            *dealerHand[i] = deck.dealCard();
+            dealerValue += cardValue(dealerHand[i]);
+        }
+
+        cout << "The dealer filps their cards and shows: " << dealerValue << endl;
+        if (playerValue < 21 && dealerValue > 21){
+            cout << "You win! The dealer busted! You've won $" << bet << "!\n";
+            newBal = player.getBalance() + bet;
+            player.setBalance(newBal);
+        } else if (playerValue > dealerValue && playerValue < 22 ){
+            cout << "You win! You've won $" << bet << "!\n";
+            newBal = player.getBalance() + bet;
+            player.setBalance(newBal);
+
+        } else if (playerValue == dealerValue) {
+            cout << "Its a tie! You get your money back!\n";
+            newBal = player.getBalance();
+            player.setBalance(newBal);
+        } else {
+            cout << "The dealer wins! You've lost $" << bet << "!\n";
+            newBal = player.getBalance() - bet;
+            player.setBalance(newBal);
+        }
     }
-
-    cout << "The dealer filps their cards and shows: " << dealerValue << endl;
-
-    if (playerValue > dealerValue && playerValue < 22){
-        cout << "You win! You've won $" << bet << "!\n";
-        newBal = player.getBalance() + bet;
-        player.setBalance(newBal);
-
-    } else if (playerValue == dealerValue) {
-        cout << "Its a tie! You get your money back!\n";
-        newBal = player.getBalance();
-        player.setBalance(newBal);
-    } else {
-        cout << "The dealer wins! You've lost $" << bet << "!\n";
-        newBal = player.getBalance() - bet;
-        player.setBalance(newBal);
-    }
+    
 
     player.saveToFile();
 
