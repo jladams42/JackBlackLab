@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// Constructor for the game class. Takes in the filename used to call the `Deck` class from a text file.
+// Also intializes both playerHand and dealerHand to null as they have no memory allocation at this point.
 Game::Game(string filename, bool newGame) : playerHand(nullptr), dealerHand(nullptr) {
     playHand(filename, newGame);
 }
