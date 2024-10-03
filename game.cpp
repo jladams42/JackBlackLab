@@ -109,7 +109,7 @@ void Game::playHand(string filename, bool newGame){
             stopRound = true;
             break;
         } else if (playerValue == 21 && dealerValue == 21) { // This checks the dealers initial hand to see if they have 21 - if so its a tie.
-            cout << "\nThe dealer has " << *dealerHand[0] << *dealerHand[1] << endl;
+            cout << "\nThe dealer has " << *dealerHand[0] << " " << *dealerHand[1] << endl;
             cout << "\nYou both have 21! Thats a tie. You get your money back." << endl;
             newBal = player.getBalance();
             player.setBalance(newBal);
