@@ -16,7 +16,9 @@ void displayMenu() {
 }
 
 int main() {
-    bool isPlaying = true;
+    bool isPlaying = true; // Boolean value to determine if the user wants to keep playing
+
+    // Displays the menu and allows the user to interact with the menu until they say they don't want to anymore.
     while (isPlaying) {
         displayMenu();
 
@@ -27,12 +29,12 @@ int main() {
         // Switch statement to account for each choice given
         switch(choice) {
             case 1: {
-                Game game("deck.txt", true);
+                Game game("deck.txt", true); // Plays a hand using the "deck.txt" file and sets newGame to true.
                 break;
             }
 
             case 2: {
-                Game game("deck.txt", false);
+                Game game("deck.txt", false); // Plays a hand using the "deck.txt" file and sets newGame to false.
                 break;
             }
 
@@ -43,6 +45,7 @@ int main() {
             }
 
             default: {
+                // Resets user input after an invalid character or selection (not 1-4) is used.
                 cout << "Invalid option! Please make another choice.\n";
                 cin.clear();
                 cin.ignore();
