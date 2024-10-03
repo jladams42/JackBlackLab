@@ -9,6 +9,7 @@ using namespace std;
 
 Deck::Deck (string filename) : cards(nullptr), size(0) {
     getDeck(filename);
+    srand(time(NULL));
 }
 
 Deck::~Deck(){
@@ -38,11 +39,9 @@ void Deck::getDeck(string filename) {
 
 string Deck::dealCard() {
     string newCard;
-    srand(std::time(0));
     int randomNum = ( rand() % 52 + 1 );
-    cout << "Your new random number is: " << randomNum << endl;
     newCard = *cards[randomNum];
-    
+
     return newCard;
 }
 
