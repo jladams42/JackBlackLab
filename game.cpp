@@ -16,8 +16,12 @@ Game::Game(string filename, bool newGame) : playerHand(nullptr), dealerHand(null
 Game::~Game(){
 }
 
+// This is where basically all the logic lives for the game. It reads in the playerData from the text file to grab
+// the amount of money the user has to place bets. 
 void Game::playHand(string filename, bool newGame){
-    Player player;
+    Player player; // Initialize the player object.
+
+    // All the reusable variables for the function.
     int bet, newBal;
     const int size = 10;
     int playerValue = 0;
@@ -26,6 +30,7 @@ void Game::playHand(string filename, bool newGame){
     bool cont = true;
     bool stopRound = false;
 
+    // Checks to see if the user had selected New Game or Load Game.
     if (newGame) {
         player.saveToFile();
         player.displayInfo();
@@ -34,6 +39,8 @@ void Game::playHand(string filename, bool newGame){
         player.displayInfo();
     }
 
+    // Uses the '.getBalance' function of the Player class to get the users available funds.
+    // It then checks the balance to make sure the user has enough (> 0). 
     int bal = player.getBalance();
     if (bal <= 0){
         cout << "You have no more money to bet! Please start a new game!\n";
@@ -51,6 +58,7 @@ void Game::playHand(string filename, bool newGame){
         }
         cin.ignore();
 
+        // This ensures that the user can't bet more than their available balance.
         while(bet > bal){
             cout << "You can't bet more than your available balance. Please choose another amount: ";
             cin >> bet;
@@ -58,10 +66,11 @@ void Game::playHand(string filename, bool newGame){
         }
     }
 
+    // Initialize the deck of cards to use for the game.
     Deck deck(filename);
 
-    playerHand = new string*[size];
-    dealerHand = new string*[size];
+    playerHand = new string*[size];  // Dynamic array for the players hand.
+    dealerHand = new string*[size]; // Dynamic array for the dealers hand.
     
     // Intial card draw, set at 2 since only 2 cards are needed at first.
     for (int i = 0; i < 2; ++i) {
@@ -77,9 +86,14 @@ void Game::playHand(string filename, bool newGame){
         dealerValue += cardValue(dealerHand[i]);
     }
     
+    // Resets the int i value for use in the while loop.
     int i = 2;
+
+    // While loop runs until the user either chooses to stop or loses. (Busts)
     while(cont && !stopRound){
         cout << "Your hand is: ";
+
+        // Loops through the playerHand to show the cards they've drawn.
         for (int n = 0; n < i; ++n) {
             cout << *playerHand[n] << " ";
         }
@@ -91,6 +105,8 @@ void Game::playHand(string filename, bool newGame){
         cin >> response;
         cin.ignore();
 
+        // If the user chooses to hit, this does the dealCard() function again and adds it to the array of playerHand.
+        // The else stamement handles any other choice other than H which defaults to 'stay' logic.
         if(response == "h"){
             playerHand[i] = new string;
             *playerHand[i] = deck.dealCard();
@@ -105,13 +121,14 @@ void Game::playHand(string filename, bool newGame){
             cont = false;
         }
 
+        // Calculates if the player got 21 or not. If so triggers a win response.
         if (playerValue == 21){
             cout << "You win! You've won $" << bet << "!\n";
             newBal = player.getBalance() + bet;
-            player.setBalance(newBal);
+            player.setBalance(newBal); // Updates the player balance.
             stopRound = true;
             break;
-        } else if (playerValue > 21){
+        } else if (playerValue > 21){ // Bust logic and player loses. 
             cout << "You bust!\n";
             cout << "The dealer wins! You've lost $" << bet << "!\n";
             newBal = player.getBalance() - bet;
@@ -123,7 +140,7 @@ void Game::playHand(string filename, bool newGame){
         ++i;
     }
 
-    // Dealers turn
+    // Dealers turn and will draw cards until they reach 17 (Default dealer logic).
     if (!stopRound){
         while(dealerValue < 17){
             int i = 2;
@@ -133,6 +150,9 @@ void Game::playHand(string filename, bool newGame){
         }
 
         cout << "The dealer filps their cards and shows: " << dealerValue << endl;
+
+        // This handles all the logic for if you dealers busts, if the player has higher than the dealer
+        // without busting or if the player loses to the dealer. 
         if (playerValue < 21 && dealerValue > 21){
             cout << "You win! The dealer busted! You've won $" << bet << "!\n";
             newBal = player.getBalance() + bet;
@@ -154,10 +174,12 @@ void Game::playHand(string filename, bool newGame){
     }
     
 
+    // This saves all the player data back to the save file.
     player.saveToFile();
 
 }
 
+// Calculates the card values by interperting the string values to integers. 
 int Game::cardValue(string* currentCards){
     int cardValue;
      if (*currentCards == "Q" || *currentCards == "K" || *currentCards == "J") {

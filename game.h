@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// Defines the GameData class and its protoypes. 
+// Defines the Game class and its protoypes. 
 class Game {
 private:
     string** playerHand;
@@ -16,7 +16,6 @@ public:
     Game(string filename, bool newGame);
     ~Game();
 
-    //int getBet(int bet);
     void playHand(string filename, bool newGame);
     int cardValue(string* currentCards);
     int handValue ();
